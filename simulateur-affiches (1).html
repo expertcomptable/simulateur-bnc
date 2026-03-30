@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BNC / SARL / SAS — Simulateur — Les Affiches de Grenoble</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root {
+  --rouge:   #8B1A1A;
+  --rouge-v: #a82020;
+  --noir:    #1a1a1a;
+  --fond:    #f5f4f0;
+  --gris-l:  #eceae4;
+  --gris-b:  #cccccc;
+  --blanc:   #ffffff;
+  --bleu:    #1a4a6b;
+  --bleu2:   #2c6e8a;
+  --vert:    #1e6b3c;
+  --or:      #c8a020;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'PT Serif', Georgia, serif;
+  background: var(--fond);
+  color: var(--noir);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* ── BANDEAU ── */
+.bandeau {
+  background: var(--blanc);
+  border-bottom: 3px solid var(--rouge);
+  padding: 9px 32px;
+}
+.bandeau-inner {
+  max-width: 1020px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bandeau-label {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--rouge);
+}
+.bandeau-logos { display: flex; gap: 14px; }
+.logo-pill {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--gris-b); border: 1px solid var(--gris-b);
+  padding: 3px 8px; border-radius: 2px;
+}
+
+/* ── PAGE ── */
+.page {
+  max-width: 1020px;
+  margin: 0 auto;
+  background: var(--blanc);
+  padding: 28px 36px 48px;
+  border-left: 1px solid var(--gris-l);
+  border-right: 1px solid var(--gris-l);
+  min-height: 100vh;
+}
+
+.article-titre {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: 1.85rem; font-weight: 700; line-height: 1.12;
+  color: var(--noir); margin-bottom: 8px;
+  padding-bottom: 10px; border-bottom: 1.5px dotted var(--gris-b);
+}
+.article-sous-titre {
+  font-family: 'PT Serif', serif;
+  font-size: .9rem; font-style: italic; font-weight: 700;
+  color: var(--noir); margin-top: 10px; margin-bottom: 22px; line-height: 1.5;
+}
+
+.intertitre {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .78rem; font-weight: 700; color: var(--rouge);
+  border-bottom: 1.5px solid var(--rouge);
+  padding-bottom: 3px; margin: 20px 0 12px; display: inline-block;
+}
+
+/* ── INPUTS VISUELS ── */
+.inputs-section { margin-bottom: 24px; }
+
+.inputs-group-label {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: #999; margin-bottom: 8px;
+}
+
+/* Ligne 1 : 3 champs principaux */
+.inputs-row1 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Ligne 2 : TMI + parts fiscales */
+.inputs-row2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 620px) {
+  .inputs-row1, .inputs-row2 { grid-template-columns: 1fr; }
+}
+
+/* Champ numérique standard */
+.field {
+  border: 1px solid var(--gris-b);
+  border-top: 2.5px solid var(--rouge);
+  background: var(--fond);
+  padding: 10px 14px;
+  transition: border-color .15s, background .15s;
+  position: relative;
+}
+.field:focus-within {
+  border-color: var(--rouge);
+  border-top-color: var(--rouge);
+  background: #fff8f8;
+  box-shadow: 0 0 0 2px rgba(139,26,26,.08);
+}
+.field.field-tmi { border-top-color: var(--bleu); }
+.field.field-tmi:focus-within { border-color: var(--bleu); background: #f0f5fb; box-shadow: 0 0 0 2px rgba(26,74,107,.08); }
+.field.field-parts { border-top-color: var(--vert); }
+.field.field-parts:focus-within { border-color: var(--vert); background: #f0f7f3; box-shadow: 0 0 0 2px rgba(30,107,60,.08); }
+
+.field label {
+  display: block;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #888; margin-bottom: 6px;
+}
+.field.field-tmi label { color: var(--bleu); }
+.field.field-parts label { color: var(--vert); }
+
+.field-row { display: flex; align-items: baseline; gap: 4px; }
+.field .euro { font-family: 'PT Serif', serif; font-size: .9rem; color: #bbb; }
+
+.field input[type="number"] {
+  width: 100%;
+  background: transparent; border: none; outline: none;
+  color: var(--noir); font-family: 'PT Serif', serif;
+  font-size: 1.25rem; font-weight: 700;
+  -moz-appearance: textfield;
+}
+.field input[type="number"]::-webkit-outer-spin-button,
+.field input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.field-hint {
+  font-size: .6rem; color: #aaa; margin-top: 4px;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+}
+
+/* Valeur affichée live */
+.field-live {
+  position: absolute; top: 10px; right: 12px;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .62rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+}
+.field .field-live { background: rgba(139,26,26,.1); color: var(--rouge); }
+.field.field-tmi .field-live { background: rgba(26,74,107,.1); color: var(--bleu); }
+.field.field-parts .field-live { background: rgba(30,107,60,.1); color: var(--vert); }
+
+
+/* Sélecteur parts */
+.parts-select {
+  display: flex; gap: 6px; margin-top: 6px;
+}
+.part-btn {
+  flex: 1; padding: 5px 2px;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .72rem; font-weight: 600;
+  border: 1.5px solid #ccc;
+  background: var(--blanc); color: #888;
+  cursor: pointer; border-radius: 3px;
+  transition: all .15s; text-align: center;
+}
+.part-btn.active {
+  background: var(--vert); color: var(--blanc);
+  border-color: var(--vert);
+}
+.part-btn:hover:not(.active) { border-color: var(--vert); color: var(--vert); }
+
+/* BTN */
+.btn {
+  display: block; width: 100%; padding: 11px 20px;
+  background: var(--rouge); border: none; color: var(--blanc);
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .82rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; transition: background .15s; margin-bottom: 28px;
+}
+.btn:hover { background: var(--rouge-v); }
+
+/* ── RÉSULTATS ── */
+#results { display: none; }
+#results.show { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── BADGES TMI ── */
+.tmi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (max-width: 620px) { .tmi-row { grid-template-columns: 1fr; } }
+
+.tmi-badge {
+  border: 1px solid var(--gris-b);
+  padding: 10px 14px;
+  text-align: center;
+  border-radius: 2px;
+}
+.tmi-badge .tb-label {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.tmi-badge .tb-val {
+  font-family: 'PT Serif', serif;
+  font-size: 1.4rem; font-weight: 700; line-height: 1;
+}
+.tmi-badge .tb-sub {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .62rem; color: #888; margin-top: 3px;
+}
+.tmi-badge.bnc-badge  { border-top: 2.5px solid var(--rouge); }
+.tmi-badge.tns-badge  { border-top: 2.5px solid var(--bleu); }
+.tmi-badge.sas-badge  { border-top: 2.5px solid var(--bleu2); }
+.tmi-badge.bnc-badge  .tb-label, .tmi-badge.bnc-badge  .tb-val { color: var(--rouge); }
+.tmi-badge.tns-badge  .tb-label, .tmi-badge.tns-badge  .tb-val { color: var(--bleu); }
+.tmi-badge.sas-badge  .tb-label, .tmi-badge.sas-badge  .tb-val { color: var(--bleu2); }
+
+/* ── GRAPHIQUE ── */
+.chart-wrap {
+  margin-bottom: 18px;
+  border: 1px solid var(--gris-b);
+  border-top: 2px solid var(--noir);
+  padding: 16px;
+  background: var(--fond);
+}
+.chart-title {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .68rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #666; margin-bottom: 14px;
+}
+.chart-bars { display: flex; flex-direction: column; gap: 10px; }
+
+.bar-group { display: flex; flex-direction: column; gap: 3px; }
+.bar-label {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .65rem; font-weight: 700; color: #666;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.bar-track {
+  height: 28px; background: #e8e6e0;
+  border-radius: 2px; position: relative; overflow: visible;
+}
+.bar-fill {
+  height: 100%; border-radius: 2px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.bar-fill::after {
+  content: attr(data-val);
+  position: absolute; right: -6px; top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .7rem; font-weight: 700;
+  white-space: nowrap;
+}
+.bar-bnc  .bar-fill { background: var(--rouge); }
+.bar-bnc  .bar-fill::after { color: var(--rouge); }
+.bar-tns  .bar-fill { background: var(--bleu); }
+.bar-tns  .bar-fill::after { color: var(--bleu); }
+.bar-sas  .bar-fill { background: var(--bleu2); }
+.bar-sas  .bar-fill::after { color: var(--bleu2); }
+
+.bar-sub {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.bar-sub span {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; color: #999;
+}
+.bar-sub span strong { font-weight: 700; color: #555; }
+
+/* ── TROIS COLONNES ── */
+.three-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 18px;
+}
+@media (max-width: 680px) { .three-cols { grid-template-columns: 1fr; } }
+
+.result-card { border: 1px solid var(--gris-b); }
+.result-card.bnc { border-top: 2.5px solid var(--rouge); }
+.result-card.tns { border-top: 2.5px solid var(--bleu); }
+.result-card.sas { border-top: 2.5px solid var(--bleu2); }
+
+.c-head {
+  padding: 8px 11px;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--blanc);
+}
+.bnc .c-head { background: var(--rouge); }
+.tns .c-head { background: var(--bleu); }
+.sas .c-head { background: var(--bleu2); }
+
+.c-sub {
+  padding: 3px 11px 6px;
+  font-family: 'PT Serif', serif; font-size: .68rem; font-style: italic;
+  color: rgba(255,255,255,.75);
+}
+.bnc .c-sub { background: var(--rouge); }
+.tns .c-sub { background: var(--bleu); }
+.sas .c-sub { background: var(--bleu2); }
+
+.c-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 5px 11px; border-top: 1px solid var(--gris-l);
+  font-family: 'PT Serif', serif; font-size: .78rem; gap: 6px;
+}
+.c-row:nth-child(even) { background: var(--fond); }
+.c-row .lbl { color: #555; flex: 1; }
+.c-row .val { font-weight: 700; white-space: nowrap; }
+.c-row.subtotal {
+  border-top: 1.5px solid var(--gris-b); background: #f0ece4;
+}
+.c-row.subtotal .lbl { font-weight: 700; color: var(--noir); }
+.c-row.subtotal .val { font-size: .85rem; }
+.c-row.reserve { background: #eaf4ec; border-top: 1.5px solid #b2d8bb; }
+.c-row.reserve .lbl { color: var(--vert); font-weight: 700; }
+.c-row.reserve .val { color: var(--vert); font-weight: 700; }
+.c-row.brut-row { background: #f0f5fa; border-top: 1px solid #c5d8e8; }
+.c-row.brut-row .lbl { color: var(--bleu2); font-style: italic; }
+.c-row.brut-row .val { color: var(--bleu2); }
+
+/* ── ENCADRÉ IS ── */
+.encadre-is {
+  border: 1px solid #b8cdd8; border-left: 3px solid var(--bleu);
+  background: #f0f6fa; padding: 12px 14px; margin-bottom: 16px;
+}
+.enc-titre {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .68rem; font-weight: 700; color: var(--bleu);
+  letter-spacing: .06em; text-transform: uppercase;
+  margin-bottom: 5px; border-bottom: 1px solid #b8cdd8; padding-bottom: 4px;
+}
+.encadre-is p { font-family: 'PT Serif', serif; font-size: .8rem; color: #333; line-height: 1.6; }
+.encadre-is p strong { color: var(--bleu); }
+
+/* ── MESSAGE CLÉ ── */
+.message-cle {
+  border: 1px solid var(--gris-b); border-left: 3px solid var(--rouge);
+  background: #faf6f0; padding: 12px 14px; margin-bottom: 16px;
+}
+.mc-label {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--rouge); margin-bottom: 5px;
+}
+.message-cle p { font-family: 'PT Serif', serif; font-size: .84rem; color: var(--noir); line-height: 1.6; }
+.message-cle p strong { color: var(--rouge); }
+.point-fin::after { content: ' ●'; color: var(--rouge); }
+
+.note-bas {
+  font-family: 'PT Serif', serif; font-size: .7rem; color: #888;
+  line-height: 1.55; border-top: 1px solid var(--gris-l); padding-top: 10px;
+}
+
+footer {
+  background: var(--blanc); border-top: 2px solid var(--rouge); padding: 10px 32px; text-align: center;
+}
+footer p {
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: .6rem; color: #aaa; letter-spacing: .05em; text-transform: uppercase;
+}
+footer a { color: var(--rouge); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="bandeau">
+  <div class="bandeau-inner">
+    <span class="bandeau-label">L'Expertise du Chiffre</span>
+    <div class="bandeau-logos">
+      <span class="logo-pill">ADECA</span>
+      <span class="logo-pill">CRCC</span>
+      <span class="logo-pill">Ordre EC</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <h1 class="article-titre">BNC, SARL/SELARL ou SAS/SELAS ?<br>Simulez votre situation.</h1>
+  <p class="article-sous-titre">Quatre données, trois structures comparées instantanément. Cotisations, IS, IR, taux moyen d'imposition et ce qu'il reste à piloter.</p>
+
+  <p class="intertitre">Vos paramètres</p>
+
+  <div class="inputs-section">
+
+    <div class="inputs-group-label">Données financières</div>
+    <div class="inputs-row1">
+      <div class="field">
+        <label>Recettes annuelles HT</label>
+        <div class="field-row">
+          <span class="euro">€</span>
+          <input type="number" id="recettes" value="180000" min="0" step="1000" oninput="calculer()">
+        </div>
+        <div class="field-hint">Chiffre d'affaires encaissé</div>
+      </div>
+      <div class="field">
+        <label>Charges professionnelles</label>
+        <div class="field-row">
+          <span class="euro">€</span>
+          <input type="number" id="charges" value="20000" min="0" step="1000" oninput="calculer()">
+        </div>
+        <div class="field-hint">Hors cotisations sociales</div>
+      </div>
+      <div class="field">
+        <label>Rémunération nette souhaitée</label>
+        <div class="field-row">
+          <span class="euro">€</span>
+          <input type="number" id="remun" value="60000" min="0" step="1000" oninput="calculer()">
+        </div>
+        <div class="field-hint">Après cotisations, avant IR</div>
+      </div>
+    </div>
+
+    <div class="inputs-group-label">Situation fiscale &amp; familiale</div>
+    <div class="inputs-row2" style="grid-template-columns: 1fr;">
+
+
+
+      <div class="field field-parts">
+        <label>Parts fiscales (quotient familial)</label>
+        <span class="field-live" id="parts-live">1 part</span>
+        <div class="parts-select" id="parts-btns">
+          <button class="part-btn active" onclick="setParts(1, this)">1</button>
+          <button class="part-btn" onclick="setParts(1.5, this)">1,5</button>
+          <button class="part-btn" onclick="setParts(2, this)">2</button>
+          <button class="part-btn" onclick="setParts(2.5, this)">2,5</button>
+          <button class="part-btn" onclick="setParts(3, this)">3</button>
+          <button class="part-btn" onclick="setParts(3.5, this)">3,5</button>
+          <button class="part-btn" onclick="setParts(4, this)">4</button>
+        </div>
+        <div class="field-hint">1 = célibataire · 2 = couple · +0,5 par enfant</div>
+        <div style="margin-top:8px; padding:8px 10px; background:#f0f7f3; border-left:2px solid var(--vert); font-family:'PT Serif',serif; font-size:.72rem; color:#555; line-height:1.55;">
+          Le nombre de parts permet d'approcher l'effet du quotient familial sur l'IR. Le calcul réel de l'impôt sur le revenu dépend de bien d'autres paramètres : autres revenus du foyer, déductions, abattements, réductions d'impôt. Cette simulation est volontairement simplifiée — chaque situation est unique.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="results">
+
+    <!-- BADGES TMI -->
+    <p class="intertitre">Taux moyen d'imposition</p>
+    <div class="tmi-row">
+      <div class="tmi-badge bnc-badge">
+        <div class="tb-label">BNC</div>
+        <div class="tb-val" id="tmi-bnc">—</div>
+        <div class="tb-sub" id="ir-bnc-sub">—</div>
+      </div>
+      <div class="tmi-badge tns-badge">
+        <div class="tb-label">SARL / SELARL</div>
+        <div class="tb-val" id="tmi-tns">—</div>
+        <div class="tb-sub" id="ir-tns-sub">—</div>
+      </div>
+      <div class="tmi-badge sas-badge">
+        <div class="tb-label">SAS / SELAS</div>
+        <div class="tb-val" id="tmi-sas">—</div>
+        <div class="tb-sub" id="ir-sas-sub">—</div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUE -->
+    <p class="intertitre">Répartition des prélèvements</p>
+    <div class="chart-wrap">
+      <div class="chart-title">Total prélèvements (cotisations + IS + IR) par structure</div>
+      <div class="chart-bars">
+        <div class="bar-group bar-bnc">
+          <div class="bar-label">BNC</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-bnc" data-val="" style="width:0%"></div></div>
+          <div class="bar-sub">
+            <span>Cotisations <strong id="bs-cot-bnc">—</strong></span>
+            <span>IR <strong id="bs-ir-bnc">—</strong></span>
+            <span>Total <strong id="bs-tot-bnc">—</strong></span>
+          </div>
+        </div>
+        <div class="bar-group bar-tns">
+          <div class="bar-label">SARL / SELARL</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-tns" data-val="" style="width:0%"></div></div>
+          <div class="bar-sub">
+            <span>Cotisations <strong id="bs-cot-tns">—</strong></span>
+            <span>IS <strong id="bs-is-tns">—</strong></span>
+            <span>IR <strong id="bs-ir-tns">—</strong></span>
+            <span>Total <strong id="bs-tot-tns">—</strong></span>
+          </div>
+        </div>
+        <div class="bar-group bar-sas">
+          <div class="bar-label">SAS / SELAS</div>
+          <div class="bar-track"><div class="bar-fill" id="bar-sas" data-val="" style="width:0%"></div></div>
+          <div class="bar-sub">
+            <span>Cotisations <strong id="bs-cot-sas">—</strong></span>
+            <span>IS <strong id="bs-is-sas">—</strong></span>
+            <span>IR <strong id="bs-ir-sas">—</strong></span>
+            <span>Total <strong id="bs-tot-sas">—</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROIS COLONNES -->
+    <p class="intertitre">Détail par structure</p>
+    <div class="three-cols">
+
+      <div class="result-card bnc">
+        <div class="c-head">BNC</div>
+        <div class="c-sub">Déclaration contrôlée</div>
+        <div class="c-row"><span class="lbl">Recettes HT</span><span class="val" id="b-ca">—</span></div>
+        <div class="c-row"><span class="lbl">Charges pro</span><span class="val" id="b-ch">—</span></div>
+        <div class="c-row"><span class="lbl">Bénéfice avant cotisations</span><span class="val" id="b-bav">—</span></div>
+        <div class="c-row"><span class="lbl">Cotisations TNS*</span><span class="val" id="b-cot">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Résultat fiscal net</span><span class="val" id="b-res">—</span></div>
+        <div class="c-row"><span class="lbl">Impôt sur le revenu (IR)</span><span class="val" id="b-ir">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Net dans la poche</span><span class="val" id="b-net">—</span></div>
+        <div class="c-row reserve"><span class="lbl">Réserve structure</span><span class="val">—</span></div>
+      </div>
+
+      <div class="result-card tns">
+        <div class="c-head">SARL / SELARL</div>
+        <div class="c-sub">Gérant majoritaire TNS</div>
+        <div class="c-row"><span class="lbl">CA HT</span><span class="val" id="t-ca">—</span></div>
+        <div class="c-row"><span class="lbl">Charges pro</span><span class="val" id="t-ch">—</span></div>
+        <div class="c-row"><span class="lbl">Rémunération nette TNS</span><span class="val" id="t-rem">—</span></div>
+        <div class="c-row"><span class="lbl">Cotisations TNS (45 %)</span><span class="val" id="t-cot">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Résultat avant IS</span><span class="val" id="t-rav">—</span></div>
+        <div class="c-row"><span class="lbl">IS**</span><span class="val" id="t-is">—</span></div>
+        <div class="c-row reserve"><span class="lbl">Réserve nette société</span><span class="val" id="t-res">—</span></div>
+        <div class="c-row"><span class="lbl">Impôt sur le revenu (IR)</span><span class="val" id="t-ir">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Net perçu après IR</span><span class="val" id="t-net">—</span></div>
+      </div>
+
+      <div class="result-card sas">
+        <div class="c-head">SAS / SELAS</div>
+        <div class="c-sub">Président assimilé salarié</div>
+        <div class="c-row"><span class="lbl">CA HT</span><span class="val" id="s-ca">—</span></div>
+        <div class="c-row"><span class="lbl">Charges pro</span><span class="val" id="s-ch">—</span></div>
+        <div class="c-row brut-row"><span class="lbl">Rémunération brute</span><span class="val" id="s-brut">—</span></div>
+        <div class="c-row"><span class="lbl">Charges patronales (40 %)</span><span class="val" id="s-pat">—</span></div>
+        <div class="c-row"><span class="lbl">Charges salariales (22 %)</span><span class="val" id="s-sal">—</span></div>
+        <div class="c-row"><span class="lbl">Rémunération nette</span><span class="val" id="s-rem">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Résultat avant IS</span><span class="val" id="s-rav">—</span></div>
+        <div class="c-row"><span class="lbl">IS**</span><span class="val" id="s-is">—</span></div>
+        <div class="c-row reserve"><span class="lbl">Réserve nette société</span><span class="val" id="s-res">—</span></div>
+        <div class="c-row"><span class="lbl">Impôt sur le revenu (IR)</span><span class="val" id="s-ir">—</span></div>
+        <div class="c-row subtotal"><span class="lbl">Net perçu après IR</span><span class="val" id="s-net">—</span></div>
+      </div>
+
+    </div>
+
+    <!-- ENCADRÉ IS -->
+    <div class="encadre-is">
+      <div class="enc-titre">Sur l'impôt sur les sociétés (IS)**</div>
+      <p>L'IS est payé par la <strong>personne morale</strong>, pas par le dirigeant à titre personnel. Le résultat net après IS reste dans la structure, hors de l'assiette cotisations et hors du patrimoine personnel imposable. Ce solde peut être optimisé : <strong>distribution de dividendes</strong> (flat tax 30 % ou barème IR sur option), <strong>réinvestissement</strong> dans l'activité, ou <strong>capitalisation</strong> en vue d'une cession ou d'une transmission.</p>
+    </div>
+
+    <!-- MESSAGE CLÉ -->
+    <div class="message-cle">
+      <div class="mc-label">À retenir</div>
+      <p id="key-msg" class="point-fin">—</p>
+    </div>
+
+    <p class="note-bas" id="note-text"></p>
+
+  </div>
+</div>
+
+<footer>
+  <p>Outil pédagogique — <a href="https://www.affiches.fr">affiches.fr</a> — Arthur Viale &amp; Caroline Chiron, experts-comptables — Barème IR progressif. Taux indicatifs. Simulation personnalisée indispensable avant toute décision.</p>
+</footer>
+
+<script>
+let parts = 1;
+
+function setParts(val, btn) {
+  parts = val;
+  document.querySelectorAll('.part-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const lbl = val === 1 ? '1 part' : val + ' parts';
+  document.getElementById('parts-live').textContent = lbl;
+  calculer();
+}
+
+function updateSliderBg(v) {
+  const pct = ((v - 11) / (45 - 11)) * 100;
+  document.getElementById('tmi-slider').style.setProperty('--pct', pct + '%');
+  document.getElementById('tmi-slider').style.background =
+    `linear-gradient(to right, var(--bleu) 0%, var(--bleu) ${pct}%, #ddd ${pct}%, #ddd 100%)`;
+}
+
+function fmt(n) {
+  return Math.round(n).toLocaleString('fr-FR') + '\u202f€';
+}
+
+function pct(n, base) {
+  return base > 0 ? (Math.round(n / base * 1000) / 10).toFixed(1) + '\u202f%' : '—';
+}
+
+function IS(res) {
+  if (res <= 0) return 0;
+  return Math.min(res, 42500) * 0.15 + Math.max(0, res - 42500) * 0.25;
+}
+
+// IR avec parts fiscales (quotient familial simplifié)
+function IR_calc(rev, parts) {
+  // Base par part
+  const base = rev / parts;
+  let t = 0;
+  t += Math.max(0, Math.min(base, 28797) - 11294) * 0.11;
+  t += Math.max(0, Math.min(base, 82341) - 28797) * 0.30;
+  t += Math.max(0, Math.min(base, 177106) - 82341) * 0.41;
+  t += Math.max(0, base - 177106) * 0.45;
+  return t * parts;
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function calculer() {
+  const ca    = parseFloat(document.getElementById('recettes').value) || 0;
+  const ch    = parseFloat(document.getElementById('charges').value)  || 0;
+  const remun = parseFloat(document.getElementById('remun').value)    || 0;
+  const B     = ca - ch;
+
+  // ── BNC ──
+  const C_bnc  = (0.45 * B) / 1.45;
+  const R_bnc  = B - C_bnc;
+  const ir_bnc = IR_calc(R_bnc, parts);
+  const net_bnc = R_bnc - ir_bnc;
+  const tot_bnc = C_bnc + ir_bnc;
+  const tmi_bnc = R_bnc > 0 ? ir_bnc / R_bnc * 100 : 0;
+
+  // ── SARL/SELARL TNS ──
+  const cot_tns = remun * 0.45;
+  const rav_tns = B - remun - cot_tns;
+  const is_tns  = IS(rav_tns);
+  const res_tns = rav_tns - is_tns;
+  const ir_tns  = IR_calc(remun, parts);
+  const net_tns = remun - ir_tns;
+  const tot_tns = cot_tns + is_tns + ir_tns;
+  const tmi_tns = remun > 0 ? ir_tns / remun * 100 : 0;
+
+  // ── SAS/SELAS ──
+  const brut_sas = remun / 0.78;
+  const ch_sal   = brut_sas * 0.22;
+  const ch_pat   = brut_sas * 0.40;
+  const rem_sas  = brut_sas - ch_sal;
+  const rav_sas  = B - brut_sas - ch_pat;
+  const is_sas   = IS(rav_sas);
+  const res_sas  = rav_sas - is_sas;
+  const ir_sas   = IR_calc(rem_sas, parts);
+  const net_sas  = rem_sas - ir_sas;
+  const tot_sas  = ch_pat + ch_sal + is_sas + ir_sas;
+  const tmi_sas  = rem_sas > 0 ? ir_sas / rem_sas * 100 : 0;
+
+  // ── BADGES TMI ──
+  set('tmi-bnc', tmi_bnc.toFixed(1) + '\u202f%');
+  set('ir-bnc-sub', 'IR\u202f: ' + fmt(ir_bnc) + ' sur ' + fmt(R_bnc));
+  set('tmi-tns', tmi_tns.toFixed(1) + '\u202f%');
+  set('ir-tns-sub', 'IR\u202f: ' + fmt(ir_tns) + ' sur ' + fmt(remun));
+  set('tmi-sas', tmi_sas.toFixed(1) + '\u202f%');
+  set('ir-sas-sub', 'IR\u202f: ' + fmt(ir_sas) + ' sur ' + fmt(rem_sas));
+
+  // TMI labels dans les tableaux
+
+  // ── GRAPHIQUE ──
+  const maxTot = Math.max(tot_bnc, tot_tns, tot_sas, 1);
+  const setBar = (id, val, dataVal) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.width = (val / maxTot * 88) + '%';
+      el.setAttribute('data-val', dataVal);
+    }
+  };
+  setBar('bar-bnc', tot_bnc, fmt(tot_bnc));
+  setBar('bar-tns', tot_tns, fmt(tot_tns));
+  setBar('bar-sas', tot_sas, fmt(tot_sas));
+
+  set('bs-cot-bnc', fmt(C_bnc));
+  set('bs-ir-bnc',  fmt(ir_bnc));
+  set('bs-tot-bnc', fmt(tot_bnc));
+  set('bs-cot-tns', fmt(cot_tns));
+  set('bs-is-tns',  fmt(is_tns));
+  set('bs-ir-tns',  fmt(ir_tns));
+  set('bs-tot-tns', fmt(tot_tns));
+  set('bs-cot-sas', fmt(ch_pat + ch_sal));
+  set('bs-is-sas',  fmt(is_sas));
+  set('bs-ir-sas',  fmt(ir_sas));
+  set('bs-tot-sas', fmt(tot_sas));
+
+  // ── TABLEAUX ──
+  set('b-ca',  fmt(ca)); set('b-ch', fmt(ch)); set('b-bav', fmt(B));
+  set('b-cot', fmt(C_bnc)); set('b-res', fmt(R_bnc));
+  set('b-ir',  fmt(ir_bnc)); set('b-net', fmt(net_bnc));
+
+  set('t-ca', fmt(ca)); set('t-ch', fmt(ch)); set('t-rem', fmt(remun));
+  set('t-cot', fmt(cot_tns));
+  set('t-rav', rav_tns > 0 ? fmt(rav_tns) : '0\u202f€');
+  set('t-is',  fmt(is_tns));
+  set('t-res', res_tns > 0 ? fmt(res_tns) : '0\u202f€');
+  set('t-ir',  fmt(ir_tns)); set('t-net', fmt(net_tns));
+
+  set('s-ca', fmt(ca)); set('s-ch', fmt(ch));
+  set('s-brut', fmt(brut_sas)); set('s-pat', fmt(ch_pat)); set('s-sal', fmt(ch_sal));
+  set('s-rem', fmt(rem_sas));
+  set('s-rav', rav_sas > 0 ? fmt(rav_sas) : '0\u202f€');
+  set('s-is',  fmt(is_sas));
+  set('s-res', res_sas > 0 ? fmt(res_sas) : '0\u202f€');
+  set('s-ir',  fmt(ir_sas)); set('s-net', fmt(net_sas));
+
+  // ── MESSAGE CLÉ ──
+  const tots = [{n:'SARL/SELARL (TNS)', v:tot_tns, r:res_tns}, {n:'SAS/SELAS', v:tot_sas, r:res_sas}, {n:'BNC', v:tot_bnc, r:0}];
+  tots.sort((a,b) => a.v - b.v);
+  const best = tots[0];
+  const ecart_vs_bnc = tot_bnc - best.v;
+  let msg = `La structure la plus économe est <strong>${best.n}</strong> avec ${fmt(best.v)} de prélèvements totaux.`;
+  if (ecart_vs_bnc > 0 && best.n !== 'BNC') {
+    msg += ` C'est ${fmt(ecart_vs_bnc)} de moins qu'en BNC.`;
+  }
+  const meil_reserve = Math.max(res_tns, res_sas);
+  if (meil_reserve > 0) {
+    msg += ` La société conserve jusqu'à <strong>${fmt(meil_reserve)}</strong> en réserve après IS — hors patrimoine personnel, à distribuer, réinvestir ou capitaliser.`;
+  }
+  document.getElementById('key-msg').innerHTML = msg;
+
+  // ── NOTE ──
+  set('note-text', '');
+  document.getElementById('note-text').innerHTML =
+    `* En BNC, les cotisations (${fmt(C_bnc)}) sont déductibles du bénéfice servant de base à leur calcul (C = 45\u202f% × B / 1,45). ** L'IS est payé par la personne morale. En SAS/SELAS, brut = net / 0,78 ; charges salariales 22\u202f% et patronales 40\u202f% du brut. IR calculé sur barème progressif avec ${parts} part${parts > 1 ? 's' : ''}. Taux indicatifs. Simulation personnalisée indispensable.`;
+
+  // Afficher
+  const r = document.getElementById('results');
+  r.style.display = 'block';
+  setTimeout(() => r.classList.add('show'), 10);
+}
+
+window.addEventListener('load', () => {
+  calculer();
+});
+</script>
+</body>
+</html>
